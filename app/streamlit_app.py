@@ -1,6 +1,6 @@
 import streamlit as st
 
-from src.scoring import aggregate_scores
+from utils.scoring import aggregate_scores
 from src.rewrite import suggest_rewrite
 from src.utils.domain import guess_domain
 from src.utils.text import sentences
