@@ -15,10 +15,10 @@ SRC_PATH = os.path.abspath(os.path.join(CURRENT_DIR, '..', 'src'))
 if SRC_PATH not in sys.path:
     sys.path.insert(0, SRC_PATH)
 
-# Show Python version in sidebar so we know runtime.txt is working
+# sanity: show runtime and where we're importing from
 st.sidebar.write("Python:", sys.version)
-st.title("Bias Detector – Health Check")
-st.write("If you see this, the app boots. We'll add deps next.")
+st.sidebar.write("SRC_PATH:", SRC_PATH)
+
 
 st.set_page_config(page_title="Bias Detector", layout="wide")
 
