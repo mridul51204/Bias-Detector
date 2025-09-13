@@ -8,6 +8,16 @@ from src.detectors.toxicity import score_toxicity
 from src.detectors.stereotypes import score_stereotypes
 from src.detectors.factuality import check_factuality
 
+# Make ../src importable when running from app/
+import sys, os, traceback, streamlit as st
+CURRENT_DIR = os.path.dirname(__file__)
+SRC_PATH = os.path.abspath(os.path.join(CURRENT_DIR, '..', 'src'))
+if SRC_PATH not in sys.path:
+    sys.path.insert(0, SRC_PATH)
+
+# Optional: show Python version in sidebar for sanity
+st.sidebar.write("Python:", sys.version)
+
 st.set_page_config(page_title="Bias Detector", layout="wide")
 
 st.title("Bias Detector for AI-Generated Content")
