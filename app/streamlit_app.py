@@ -8,15 +8,17 @@ from src.detectors.toxicity import score_toxicity
 from src.detectors.stereotypes import score_stereotypes
 from src.detectors.factuality import check_factuality
 
-# Make ../src importable when running from app/
-import sys, os, traceback, streamlit as st
+# --- make ../src importable when running from app/ ---
+import sys, os, streamlit as st, traceback
 CURRENT_DIR = os.path.dirname(__file__)
 SRC_PATH = os.path.abspath(os.path.join(CURRENT_DIR, '..', 'src'))
 if SRC_PATH not in sys.path:
     sys.path.insert(0, SRC_PATH)
 
-# Optional: show Python version in sidebar for sanity
+# Show Python version in sidebar so we know runtime.txt is working
 st.sidebar.write("Python:", sys.version)
+st.title("Bias Detector – Health Check")
+st.write("If you see this, the app boots. We'll add deps next.")
 
 st.set_page_config(page_title="Bias Detector", layout="wide")
 
