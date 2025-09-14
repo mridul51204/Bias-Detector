@@ -1,12 +1,9 @@
-def aggregate_scores(stereotype: int, toxicity: int, factual_error: int, weights: dict) -> int:
+def combine_scores(parts: dict) -> dict:
     """
-    Overall = w1*stereotype + w2*toxicity + w3*(100 - factual_error)
-    Returns an integer 0..100 clamped.
+    Weighted overall score for detectors.
+    parts = {"stereotypes": x, "toxicity": y, "factuality": z}
     """
-    w1 = weights.get("stereotype", 40) / 100.0
-    w2 = weights.get("toxicity", 30) / 100.0
-    w3 = weights.get("factuality", 30) / 100.0
-
-    score = (w1 * stereotype) + (w2 * toxicity) + (w3 * (100 - factual_error))
-    score = max(0, min(100, round(score)))
-    return score
+    weights = {"toxicity": 0.45, "stereotypes": 0.35, "factuality": 0.20}
+    score = sum(weights[k] * float(parts.get(k, 0.0)) for k in weights)
+    score = round(min(score, 10.0), 2)
+    return {"score": score, "weights": weights, "components": parts}
