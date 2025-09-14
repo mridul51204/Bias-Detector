@@ -1,28 +1,20 @@
-from typing import List, Tuple
+import re
 
-# Very small lexicon for MVP. Step-2 will swap to a trained model.
-TOXIC_LEXICON = {
-    "hate", "hates", "hateful",
-    "idiot", "stupid", "dumb",
-    "trash", "garbage", "disgusting",
-    "kill", "shut up",
-}
+TOXIC_WORDS = [
+    "stupid", "idiot", "dumb", "trash", "garbage", "hate", "shut up",
+    "loser", "moron", "pathetic", "terrible person",
+]
 
-def score_toxicity(text: str) -> Tuple[int, List[Tuple[str, int]]]:
-    """
-    Returns:
-      score (0-100), list of (term, count)
-    Heuristic: proportional to hits (cap at 100).
-    """
-    tlower = text.lower()
-    spans = []
-    hits = 0
-    for term in TOXIC_LEXICON:
-        c = tlower.count(term)
-        if c > 0:
-            spans.append((term, c))
-            hits += c
+def detect_toxicity(text: str) -> dict:
+    t = text.lower()
+    found = []
+    for w in TOXIC_WORDS:
+        if re.search(rf"(?<!\w){re.escape(w)}(?!\w)", t):
+            found.append(w)
 
-    # simple mapping: each hit = +15 risk, capped
-    score = min(100, hits * 15)
-    return score, spans
+    # severity via frequency and phrase length
+    raw = 0.0
+    for w in found:
+        raw += 1.5 if " " in w else 1.0
+    score = round(min(raw, 10.0), 2)
+    return {"score": score, "flags": [{"group": "toxicity", "matches": sorted(set(found))}] if found else []}
