@@ -1,40 +1,61 @@
+import sys
+from pathlib import Path
+
+# --- make `src/` importable without pyproject for now ---
+ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 
-from bias_detector.pipeline import detect_bias, explain_bias
+# our package-style imports (from src/)
+from detectors import analyze_text, detectors_health
+from utils import scoring, rewwrite
 
 st.set_page_config(page_title="Bias Detector", page_icon="🧪", layout="wide")
+st.title("Bias Detector — Clean Baseline")
 
-st.title("Bias Detector (Baseline)")
-st.write("Minimal, testable build that works with pandas/numpy locally and on Cloud.")
-
-with st.expander("System check"):
+with st.expander("Environment / Health check"):
     st.write({
-        "python": str(np.__get_config__).__class__.__module__.split('.')[0],  # quick import sanity
+        "python_ok": True,
         "numpy_version": np.__version__,
         "pandas_version": pd.__version__,
+        "detectors_ok": detectors_health(),
     })
-    st.success("Imports OK. If this section fails, fix requirements before adding features.")
+    st.caption("If any import fails here, fix requirements locally before deploying.")
 
-tab_text, tab_csv = st.tabs(["Single text", "CSV batch"])
+tabs = st.tabs(["Single Text", "CSV Batch", "Rewrite Suggestion"])
 
-with tab_text:
-    text = st.text_area("Paste text to analyze", height=160, placeholder="Paste any paragraph...")
-    if st.button("Analyze text", type="primary", use_container_width=True):
-        result = detect_bias(text or "")
+with tabs[0]:
+    text = st.text_area("Paste text", height=180, placeholder="Paste a paragraph...")
+    if st.button("Analyze", type="primary"):
+        result = analyze_text(text or "")
+        st.subheader("Result")
         st.json(result)
-        st.caption(explain_bias(result))
+        st.metric("Overall bias score", result["overall"]["score"])
+        st.caption("Scores are heuristic and capped for stability.")
 
-with tab_csv:
-    file = st.file_uploader("Upload CSV (column: text)", type=["csv"])
-    if file:
-        df = pd.read_csv(file)
+with tabs[1]:
+    up = st.file_uploader("Upload CSV with a 'text' column", type=["csv"])
+    if up:
+        df = pd.read_csv(up)
         if "text" not in df.columns:
-            st.error("CSV must have a 'text' column.")
+            st.error("CSV must contain a 'text' column.")
         else:
-            df["bias_result"] = df["text"].fillna("").apply(lambda t: detect_bias(t)["score"])
+            out = []
+            for t in df["text"].fillna(""):
+                r = analyze_text(t)
+                out.append(r["overall"]["score"])
+            df["bias_score"] = out
             st.dataframe(df.head(50))
-            st.success("Processed! (Shows first 50 rows)")
+            st.success("Processed. (Showing first 50 rows)")
 
-st.info("This is the baseline build. We’ll add NLP/ML in stages after confirming env stability.")
+with tabs[2]:
+    sample = st.text_area("Text to rewrite (soften bias/toxicity)", height=160)
+    if st.button("Rewrite", key="rw"):
+        st.write(rewwrite.rewrite_text(sample or ""))
+
+st.caption("Baseline version; add ML later once this runs clean locally.")
