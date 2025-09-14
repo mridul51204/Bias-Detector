@@ -1,9 +1,18 @@
-def guess_domain(text: str) -> str:
-    t = text.lower()
-    if any(k in t for k in ["election", "policy", "minister", "senate", "parliament", "party", "manifesto"]):
-        return "politics"
-    if any(k in t for k in ["stock", "loan", "revenue", "profit", "interest rate", "market", "finance", "roi", "npa"]):
-        return "finance"
-    if any(k in t for k in ["health", "vaccine", "symptom", "diagnosis", "treatment", "medicine", "disease", "therapy"]):
-        return "healthcare"
-    return "general"
+"""
+Domain-specific bias dictionaries or helpers.
+Extend this with lists of terms relevant to your use case.
+"""
+
+POLITICAL_TERMS = [
+    "leftist", "right-wing", "liberal", "conservative", "radical", "extremist"
+]
+
+ECONOMIC_TERMS = [
+    "capitalist", "socialist", "communist", "free-market", "pro-business", "anti-business"
+]
+
+def get_domain_terms() -> dict:
+    return {
+        "political": POLITICAL_TERMS,
+        "economic": ECONOMIC_TERMS,
+    }
