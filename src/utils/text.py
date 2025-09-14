@@ -1,9 +1,13 @@
 import re
-from typing import List
 
-def sentences(text: str) -> List[str]:
-    """
-    Tiny sentence splitter good enough for MVP (no punkt download needed).
-    """
-    rough = re.split(r'(?<=[.!?])\s+', text.strip())
-    return [s for s in rough if s]
+def normalize_whitespace(text: str) -> str:
+    """Collapse multiple spaces and trim ends."""
+    return re.sub(r"\s+", " ", text).strip()
+
+def sentence_split(text: str) -> list[str]:
+    """Naive sentence splitter by punctuation. Replace with nltk/spacy later."""
+    return re.split(r"[.!?]+", text)
+
+def word_tokenize(text: str) -> list[str]:
+    """Naive whitespace tokenizer."""
+    return text.split()
