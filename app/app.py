@@ -35,7 +35,16 @@ with tabs[0]:
         result = analyze_text(text or "")
         st.subheader("Result")
         st.json(result)
-        st.metric("Overall bias score", result["overall"]["score"])
+        # Show component scores + ML prob clearly
+        cols = st.columns(4)
+        cols[0].metric("Toxicity (0–10)", round(result["toxicity"]["score"], 2))
+        cols[1].metric("Stereotypes (0–10)", round(result["stereotypes"]["score"], 2))
+        cols[2].metric("Factuality (0–10)", round(result["factuality"]["score"], 2))
+        cols[3].metric("ML prob (0–1)", f"{result['mlsignal']['proba']:.2f}")
+        st.metric("Overall bias score", round(result["overall"]["score"], 2))
+        ov = result["overall"]["score"]
+        sev = "HIGH" if ov >= 7.5 else "MODERATE" if ov >= 3.5 else "LOW"
+        st.write(f"**Overall severity:** {sev}")
         st.caption("Scores are heuristic and capped for stability.")
 
 with tabs[1]:
