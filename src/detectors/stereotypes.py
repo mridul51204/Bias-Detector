@@ -13,14 +13,13 @@ def detect_stereotypes(text: str) -> dict:
     for group, vocab in GROUP_TERMS.items():
         found = []
         for w in vocab:
-            # word boundary or hyphenated; keep simple and fast
             if re.search(rf"(?<!\w){re.escape(w)}(?!\w)", t):
                 found.append(w)
         if found:
             hits.append({"group": group, "matches": sorted(set(found))})
 
-    # scoring: 2.0 per distinct match, capped
-    raw = sum(2.0 * len(h["matches"]) for h in hits)
+    # ↑ slightly stronger per-match weight (was 2.0)
+    raw = sum(2.5 * len(h["matches"]) for h in hits)
     score = round(min(raw, 10.0), 2)
 
     return {"score": score, "flags": hits}
