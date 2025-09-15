@@ -10,8 +10,8 @@ def detect_factuality(text: str) -> dict:
     claim_hits = [w for w in CLAIMY if re.search(rf"(?<!\w){re.escape(w)}(?!\w)", t)]
     hedge_hits = [w for w in HEDGES if re.search(rf"(?<!\w){re.escape(w)}(?!\w)", t)]
 
-    # Higher claiminess = higher bias score; hedges contribute mildly
-    raw = 1.5 * len(set(claim_hits)) + 0.5 * len(set(hedge_hits))
+    # ↑ stronger weights than before (was 1.5/0.5)
+    raw = 2.0 * len(set(claim_hits)) + 0.7 * len(set(hedge_hits))
     score = round(min(raw, 10.0), 2)
 
     flags = []
