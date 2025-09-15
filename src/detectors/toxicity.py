@@ -7,14 +7,23 @@ TOXIC_WORDS = [
 
 def detect_toxicity(text: str) -> dict:
     t = text.lower()
-    found = []
-    for w in TOXIC_WORDS:
-        if re.search(rf"(?<!\w){re.escape(w)}(?!\w)", t):
-            found.append(w)
 
-    # severity via frequency and phrase length
+    # collect all matches (so we can count repeats)
+    found_all = []
+    for w in TOXIC_WORDS:
+        found_all += re.findall(rf"(?<!\w){re.escape(w)}(?!\w)", t)
+
+    found_unique = sorted(set(found_all))
+
+    # base weight per unique hit; phrases get a bump
     raw = 0.0
-    for w in found:
-        raw += 1.5 if " " in w else 1.0
+    for w in found_unique:
+        raw += 2.0 if " " in w else 1.2
+
+    # small bonus for repeats beyond the first
+    repeats = max(0, len(found_all) - len(found_unique))
+    raw += 0.3 * repeats
+
     score = round(min(raw, 10.0), 2)
-    return {"score": score, "flags": [{"group": "toxicity", "matches": sorted(set(found))}] if found else []}
+    flags = [{"group": "toxicity", "matches": found_unique}] if found_unique else []
+    return {"score": score, "flags": flags}
