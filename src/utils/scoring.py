@@ -4,10 +4,10 @@ def combine_scores(parts: dict) -> dict:
     Scores are on 0..10; weights renormalize to sum=1 over present keys.
     """
     base_weights = {
-        "toxicity": 0.35,
-        "stereotypes": 0.30,
-        "factuality": 0.15,
-        "mlsignal": 0.20,
+        "toxicity": 0.40,     # ↑
+        "stereotypes": 0.30,  # =
+        "factuality": 0.10,   # ↓
+        "mlsignal": 0.20,     # =
     }
 
     used = {k: base_weights[k] for k in parts.keys() if k in base_weights}
