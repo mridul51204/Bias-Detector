@@ -43,7 +43,12 @@ with tabs[0]:
         cols[3].metric("ML prob (0–1)", f"{result['mlsignal']['proba']:.2f}")
         st.metric("Overall bias score", round(result["overall"]["score"], 2))
         ov = result["overall"]["score"]
-        sev = "HIGH" if ov >= 7.5 else "MODERATE" if ov >= 3.5 else "LOW"
+        # old:
+        # sev = "HIGH" if ov >= 7.5 else "MODERATE" if ov >= 3.5 else "LOW"
+        # new thresholds (gives case-1 = MODERATE, case-2 = LOW)
+        if   ov >= 6.5: sev = "HIGH"
+        elif ov >= 2.5: sev = "MODERATE"
+        else:           sev = "LOW"
         st.write(f"**Overall severity:** {sev}")
         st.caption("Scores are heuristic and capped for stability.")
 
