@@ -13,7 +13,7 @@ import numpy as np
 
 # our package-style imports (from src/)
 from detectors import analyze_text, detectors_health
-from utils import scoring, rewwrite  # NOTE: you'll rename rewwrite.py -> rewrite.py later
+from utils import scoring, rewrite
 
 # ---------------- UI CONFIG ----------------
 st.set_page_config(page_title="Bias Detector", page_icon="🧪", layout="wide")
