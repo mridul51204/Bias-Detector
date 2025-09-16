@@ -125,6 +125,6 @@ with tabs[1]:
 with tabs[2]:
     sample = st.text_area("Text to rewrite (soften bias/toxicity)", height=160)
     if st.button("Rewrite", key="rw"):
-        st.write(rewwrite.rewrite_text(sample or ""))
+        st.write(rewrite.rewrite_text(sample or ""))
 
 st.caption("Baseline version; add ML later once this runs clean locally.")
