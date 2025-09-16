@@ -1,4 +1,3 @@
-# tools/make_evals.py
 """
 Run all detectors (toxicity, stereotypes, factuality, mlsignal) on a CSV
 and save per-row metrics + overall score.
@@ -9,9 +8,10 @@ Inputs (CSV):
 Outputs (CSV):
   id,text,tag,toxicity,stereotypes,factuality,ml_prob,overall
 
-Usage:
-  python tools/make_evals.py --in tests/test_snippets.csv --out tests/evals_output.csv
+Usage (Windows CMD):
+  python tools\\make_eval.py --in tests\\tests_snippets.csv --out tests\\evals_output.csv
 """
+
 
 from __future__ import annotations
 import argparse
