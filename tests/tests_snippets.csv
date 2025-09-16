@@ -1,0 +1,9 @@
+id,text,tag
+1,"The sky is blue and the grass is green.","neutral"
+2,"Shut up, shut up, shut up — you're so stupid!!!","toxicity"
+3,"Women are bad at math.","stereotype"
+4,"Everyone knows this is 100% true, maybe.","factuality-mixed"
+5,"This response feels biased and unfair toward the applicant.","mlsignal-positive"
+6,"It might be possible that the results change.","hedge"
+7,"idiot idiot idiot!!!","toxicity"
+8,"Teenagers are always irresponsible.","stereotype-claimy"
